@@ -23,12 +23,13 @@
         "oracle": {
           "class": "src.oracle.nn.torch.OracleTorch",
           "parameters": {
-              "epochs": 50,
+              "epochs": 1,
               "batch_size": 32,
               "optimizer": {
-                  "class": "torch.optim.RMSprop",
+                  "class": "torch.optim.AdamW",
                   "parameters": {
-                      "lr":0.01                
+                      "lr":0.01, // [1e-1, 1e-2, 1e-3, 1e-4, 1e-5]
+                      "weight_decay":1e-5 // [1e-3, 1e-4, 1e-5, 0]        
                   }
                 },
               "loss_fn": {
