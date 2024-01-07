@@ -16,6 +16,10 @@ class ProteinsFull(Generator):
         self._lab_file_path = join(base_path, 'PROTEINS_full_graph_labels.txt')
         self._att_file_path = join(base_path, 'PROTEINS_full_node_attributes.txt')
         self._nlb_file_path = join(base_path, 'PROTEINS_full_node_labels.txt')
+
+        self.dataset.node_features_map = {"is_lab_0":0, "is_lab_1":1, "is_lab_2":2}
+        self.dataset.node_features_map.update({f"is_feat_{i}":i for i in range(3,32)})
+
         self.generate_dataset()
     
     def generate_dataset(self):
@@ -39,7 +43,7 @@ class ProteinsFull(Generator):
                     graphs.append(self.create_graph(adj_list, graph_id))
                     # Prepare for another graph
                     adj_list = []
-                    graph_id = self.graph_indicator[edge[0] - 1]
+                    graph_id = self.graph_indicator[edge[0] - 1].item()
                 adj_list.append(edge)
 
             # Create last graph!

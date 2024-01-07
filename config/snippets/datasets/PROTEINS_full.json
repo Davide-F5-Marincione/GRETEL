@@ -1,0 +1,11 @@
+{
+    "class": "src.dataset.dataset_base.Dataset",
+    "parameters": {
+        "generator": {
+            "class": "src.dataset.generators.proteins_full.ProteinsFull",
+            "parameters": {
+                "data_dir": "data/datasets/PROTEINS_full/"
+            }
+        }
+    }
+}
