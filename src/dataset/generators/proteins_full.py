@@ -60,25 +60,27 @@ class ProteinsFull(Generator):
                 instance_id += 1
 
     def create_graph(self, adj_list, graph_id):
-        finder = [n for edge in adj_list for n in edge]
-        min_node = min(finder)
-        max_node = max(finder)
+        adj_list = np.asarray(adj_list)
+        min_node = adj_list.min() #included
+        max_node = adj_list.max() #excluded
+        adj_list = (adj_list - min_node).T
+
+        min_node = min_node - 1 # Node ids start at 1! But indexing starts at 0!
+        # We don't remove 1 to max as max_node is excluded in the following lines.
 
         # Create adj matrix, edges are undirected!
-        mat = np.zeros((max_node - min_node + 1, max_node - min_node + 1), dtype=np.int32)
-        for n1,n2 in adj_list:
-            n1 -= min_node
-            n2 -= min_node
-            mat[n1, n2] = 1
-            mat[n2, n1] = 1
+        nodes = max_node - min_node
+        mat = np.zeros((nodes, nodes), dtype=np.int32)
+        mat[adj_list[0], adj_list[1]] = 1
+        mat[adj_list[1], adj_list[0]] = 1
 
         # Get graph label
         graph_label = self.all_graph_labels[graph_id - 1]
 
         # Get node labels
-        node_labels = self.all_node_labels[min_node-1:max_node]
+        node_labels = self.all_node_labels[min_node:max_node]
 
         # Get node attributes (should normalize?)
-        node_attributes = self.all_node_attributes[min_node-1:max_node]
+        node_attributes = self.all_node_attributes[min_node:max_node]
 
         return graph_label, mat, node_labels, node_attributes
