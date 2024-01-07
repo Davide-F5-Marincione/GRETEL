@@ -5,6 +5,7 @@ import copy
 
 
 from src.core.explainer_base import Explainer
+from src.dataset.instances.graph import GraphInstance
 
 
 class IRandExplainer(Explainer):
@@ -51,9 +52,7 @@ class IRandExplainer(Explainer):
                 cf_cand_matrix[sampled_edges[:,1], sampled_edges[:,0]] = 1 - cf_cand_matrix[sampled_edges[:,1], sampled_edges[:,0]]
             
                 # build the counterfactaul candidates instance 
-                result.data = cf_cand_matrix
-                # TODO this resetting of the nx representation it is not very robust
-                result._nx_repr = None
+                result = GraphInstance(instance.id, label=instance.label, data=cf_cand_matrix, node_features=instance.node_features)
 
                 # if a counterfactual was found return that
                 l_cf_cand = self.oracle.predict(result)

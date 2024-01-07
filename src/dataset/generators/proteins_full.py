@@ -60,15 +60,17 @@ class ProteinsFull(Generator):
                 instance_id += 1
 
     def create_graph(self, adj_list, graph_id):
-        adj_list = np.asarray(adj_list)
-        min_node = adj_list.min()
-        max_node = adj_list.max()
+        finder = [n for edge in adj_list for n in edge]
+        min_node = min(finder)
+        max_node = max(finder)
 
         # Create adj matrix, edges are undirected!
         mat = np.zeros((max_node - min_node + 1, max_node - min_node + 1), dtype=np.int32)
-        rel_adj_list = adj_list - min_node
-        mat[rel_adj_list] = 1
-        mat[np.flip(rel_adj_list, 1)] = 1
+        for n1,n2 in adj_list:
+            n1 -= min_node
+            n2 -= min_node
+            mat[n1, n2] = 1
+            mat[n2, n1] = 1
 
         # Get graph label
         graph_label = self.all_graph_labels[graph_id - 1]
