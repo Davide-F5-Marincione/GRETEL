@@ -35,9 +35,6 @@ class IRandExplainer(Explainer):
         # Calculate the maximun percent of edges to modify
         k = int(len(new_edges) * self.perturbation_percentage)
 
-        # Creating the instance to return (initially a copy of the original instance)
-        result = copy.deepcopy(instance)
-
         # increase the number of random modifications
         for i in range(1, k):
             # how many attempts at a current modification level
@@ -51,19 +48,20 @@ class IRandExplainer(Explainer):
                 cf_cand_matrix[sampled_edges[:,0], sampled_edges[:,1]] = 1 - cf_cand_matrix[sampled_edges[:,0], sampled_edges[:,1]]
                 cf_cand_matrix[sampled_edges[:,1], sampled_edges[:,0]] = 1 - cf_cand_matrix[sampled_edges[:,1], sampled_edges[:,0]]
             
-                # build the counterfactaul candidates instance 
-                result = GraphInstance(instance.id, label=instance.label, data=cf_cand_matrix, node_features=instance.node_features)
-
+                # build the counterfactaul candidates instance
+                result = GraphInstance(id=instance.id,
+                                       label=0,
+                                       data=cf_cand_matrix,
+                                       node_features=instance.node_features)
+                
                 # if a counterfactual was found return that
                 l_cf_cand = self.oracle.predict(result)
                 if l_input_inst != l_cf_cand:
                     result.label = l_cf_cand
                     return result
-                else:
-                    result.data = instance.data
         
         # If no counterfactual was found return the original instance by convention
-        return instance
+        return copy.deepcopy(instance)
     
 
     def real_fit(self):
