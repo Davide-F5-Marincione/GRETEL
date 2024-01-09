@@ -1,7 +1,14 @@
-1. Scoprire come ottimizzare l'oracolo (come runnare l'ottimizzazione, come visualizzare i risultati e come salvare e ricaricare le reti) <--!!!!
 2. Ottimizzare l'oracolo.
     a. Prima ottimizzare l'optimizer (lr e weight_decay)
     b. Ottimizzare la rete stessa
 3. Fare una o molteplici run da molteplici epoche con i valori ottimizzati (salvare i risultati!).
 # Qui finisce la creazione dell'oracolo/modello.
 4. Ottimizzare gli explainers (tocca capire che fare)
+
+
+
+Davide: 5
+Marta: 2
+Agnese: 3
+
+Testare tutto il resto.

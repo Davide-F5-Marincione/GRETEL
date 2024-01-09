@@ -132,7 +132,7 @@ dmypy.json
 
 # data folders
 data/cache/*
-output/
+# output/
 stats/
 AAAI/
 .DS_Store
