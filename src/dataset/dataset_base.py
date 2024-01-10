@@ -1,5 +1,6 @@
 import pickle
 from typing import List
+import numpy as np
 
 from sklearn.model_selection import StratifiedKFold
 
@@ -31,6 +32,7 @@ class Dataset(Savable):
         self._class_indices = {}
         
         self._num_nodes = None
+        self._num_nodes_values = None
         #################################################
     
         
@@ -41,11 +43,18 @@ class Dataset(Savable):
                                                     "local_config": self.local_config['parameters']['generator'],
                                                     "dataset": self
                                                 })
+        self._inject_dataset()
+            
         self.manipulators = self._create_manipulators()
             
         self.generate_splits(n_splits=self.local_config['parameters']['n_splits'],
                              shuffle=self.local_config['parameters']['shuffle'])
 
+       
+    def _inject_dataset(self):
+        for instance in self.instances:
+            instance._dataset = self
+            
     def _create_manipulators(self):
         manipulator_instances = []
         for manipulator in self.local_config['parameters']['manipulators']:
@@ -96,8 +105,16 @@ class Dataset(Savable):
     @property
     def num_nodes(self):
         if not self._num_nodes:
-            self._num_nodes = len(self.get_instance(0).data)
+            self._num_nodes = np.min(self.num_nodes_values)
         return self._num_nodes
+    
+    @property
+    def num_nodes_values(self):
+        if not self._num_nodes_values:
+            self._num_nodes_values = []
+            for inst in self.instances:
+                self._num_nodes_values.append(len(inst.data))
+        return self._num_nodes_values
     
     def get_split_indices(self, fold_id=-1):
         if fold_id == -1:
@@ -141,10 +158,11 @@ class Dataset(Savable):
                 self.edge_features_map = dump['edge_features_map']
                 self.graph_features_map = dump['graph_features_map']
                 self._num_nodes = dump['num_nodes']
-                self._class_indices = dump['class_indices'] 
+                self._class_indices = dump['class_indices']
+                self.manipulators = dump['manipulators']
 
             #TODO: Attach the dataset back to all the instances
-            
+            self._inject_dataset()
             
                 
     def write(self):
@@ -158,7 +176,8 @@ class Dataset(Savable):
             "edge_features_map": self.edge_features_map,
             "graph_features_map": self.graph_features_map,
             "num_nodes": self._num_nodes,
-            "class_indices": self._class_indices      
+            "class_indices": self._class_indices,
+            "manipulators": self.manipulators      
         }
         
         with open(store_path, 'wb') as f:
