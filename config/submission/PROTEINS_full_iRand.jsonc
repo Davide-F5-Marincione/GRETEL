@@ -28,13 +28,13 @@
         "oracle": {
           "class": "src.oracle.nn.torch.OracleTorch",
           "parameters": {
-              "epochs": 5,
+              "epochs": 100,
               "batch_size": 32,
               "optimizer": {
                   "class": "torch.optim.AdamW",
                   "parameters": {
-                      "lr":1e-2, // [1e-1, 1e-2, 1e-3, 1e-4, 1e-5]
-                      "weight_decay":0 // [1e-3, 1e-4, 1e-5, 0]
+                      "lr":1e-2,
+                      "weight_decay":0
                   }
                 },
               "loss_fn": {
@@ -46,9 +46,9 @@
               "model": {
                 "class": "src.oracle.nn.gcn.DownstreamGCN",
                 "parameters": {
-                  "num_conv_layers":3, // 2, 3, 5
-                  "num_dense_layers":1, // 1, 2, 3
-                  "conv_booster":2, // 1, 2, 3
+                  "num_conv_layers":5,
+                  "num_dense_layers":2, // 1, 2, 3
+                  "conv_booster":3, // 1, 2, 3
                   "linear_decay":1.8 // 1.6, 1.8, 2, 2.2
                 }
             }
