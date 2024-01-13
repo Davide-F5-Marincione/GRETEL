@@ -4,8 +4,8 @@
         "parameters" : {
             "lock_release_tout":120,
             "propagate":[
-                {"in_sections" : ["explainers"],"params" : {"fold_id": 0, "retrain": false}},
-                {"in_sections" : ["do-pairs/oracle"],"params" : {"fold_id": -1,"retrain": true}},
+                {"in_sections" : ["explainers"],"params" : {"fold_id": 0, "retrain": true}},
+                {"in_sections" : ["do-pairs/oracle"],"params" : {"fold_id": -1,"retrain": false}},
                 {"in_sections": ["do-pairs/dataset"],"params": { "manipulators" : 
                 [{ "class": "src.dataset.manipulators.causality.Causality", "parameters": {} },
                 { "class": "src.dataset.manipulators.centralities.NodeCentrality", "parameters": {} },
@@ -21,14 +21,14 @@
               "generator": {
                   "class": "src.dataset.generators.proteins_full.ProteinsFull",
                   "parameters": { "data_dir": "data/datasets/PROTEINS_full/",
-                                  "max_nodes": 96 }
+                                  "max_nodes": 72 } // Had to lower otherwise we couldn't compute!
               }
           }
         },
         "oracle": {
           "class": "src.oracle.nn.torch.OracleTorch",
           "parameters": {
-              "epochs": 1,
+              "epochs": 50,
               "batch_size": 32,
               "optimizer": {
                   "class": "torch.optim.AdamW",
@@ -45,13 +45,31 @@
                 },
               "model": {
                 "class": "src.oracle.nn.gcn.DownstreamGCN",
-                "parameters": {"num_conv_layers":3,"num_dense_layers":1,"conv_booster":2,"linear_decay":1.8}
+                "parameters": {
+                  "num_conv_layers":3,
+                  "num_dense_layers":2, // 1, 2, 3
+                  "conv_booster":2, // 1, 2, 3
+                  "linear_decay":2.2 // 1.6, 1.8, 2, 2.2
+                }
             }
           }
         }
       }],
 
-    "explainers": [{"class": "src.explainer.generative.gcountergan.GCounteRGAN","parameters":{"epochs": 150}}
+    "explainers": [{
+      "class": "src.explainer.generative.gcountergan.GCounteRGAN",
+      "parameters":{
+        "epochs": 5,
+        "batch_size":4,
+        "proto_optimizer":{
+          "class": "torch.optim.AdamW",
+          "parameters": {
+            "lr":1e-4, // [1e-1, 1e-2, 1e-3, 1e-4, 1e-5]
+            "weight_decay":0 // [1e-3, 1e-4, 1e-5, 0]
+          }
+        }
+      }
+    }
     ],
     "compose_mes" : "config/snippets/default_metrics.json",
     "compose_strs" : "config/snippets/default_store_paths.json"
