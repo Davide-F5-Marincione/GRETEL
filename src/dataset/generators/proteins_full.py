@@ -95,7 +95,7 @@ class ProteinsFull(Generator):
             return None, True
 
         # Create adj matrix, edges are undirected!
-        mat = np.zeros((self._max_nodes, self._max_nodes), dtype=np.int32)
+        mat = np.zeros((nodes, nodes), dtype=np.int32)
         mat[adj_list[0], adj_list[1]] = 1
         mat[adj_list[1], adj_list[0]] = 1
 
@@ -104,13 +104,13 @@ class ProteinsFull(Generator):
 
         # Get node labels
         node_labels = self.all_node_labels[min_node:max_node]
-        pad = self._max_nodes - node_labels.shape[0]
-        node_labels = np.concatenate([node_labels, np.zeros(pad, dtype=np.int32)], 0)
+        # pad = self._max_nodes - node_labels.shape[0]
+        # node_labels = np.concatenate([node_labels, np.zeros(pad, dtype=np.int32)], 0)
 
         # Get node attributes (should normalize?)
         node_attributes = self.all_node_attributes[min_node:max_node]
-        att_size = list(node_attributes.shape)
-        att_size[0] = pad
-        node_attributes = np.concatenate([node_attributes, np.zeros(att_size)], 0)
+        # att_size = list(node_attributes.shape)
+        # att_size[0] = pad
+        # node_attributes = np.concatenate([node_attributes, np.zeros(att_size)], 0)
 
         return (graph_label, mat, node_labels, node_attributes), False
