@@ -4,11 +4,10 @@
         "parameters" : {
             "lock_release_tout":120,
             "propagate":[
-                {"in_sections" : ["explainers"],"params" : {"fold_id": 0, "retrain": true}},
+                {"in_sections" : ["explainers"],"params" : {"fold_id": 1, "retrain": true}},
                 {"in_sections" : ["do-pairs/oracle"],"params" : {"fold_id": -1,"retrain": false}},
                 {"in_sections": ["do-pairs/dataset"],"params": { "manipulators" : 
-                [{ "class": "src.dataset.manipulators.causality.Causality", "parameters": {} },
-                { "class": "src.dataset.manipulators.centralities.NodeCentrality", "parameters": {} },
+                [{ "class": "src.dataset.manipulators.centralities.NodeCentrality", "parameters": {} },
                 { "class": "src.dataset.manipulators.weights.EdgeWeights", "parameters": {} }] }}
                 // {"in_sections": ["do-pairs/dataset"],"params": { "compose_man" : "config/snippets/datasets/centr_and_weights.json" }}
               ]
@@ -59,15 +58,8 @@
     "explainers": [{
       "class": "src.explainer.generative.gcountergan.GCounteRGAN",
       "parameters":{
-        "epochs": 5,
-        "batch_size":4,
-        "proto_optimizer":{
-          "class": "torch.optim.AdamW",
-          "parameters": {
-            "lr":1e-4, // [1e-1, 1e-2, 1e-3, 1e-4, 1e-5]
-            "weight_decay":0 // [1e-3, 1e-4, 1e-5, 0]
-          }
-        }
+        "epochs": 400,
+        "batch_size":32
       }
     }
     ],
