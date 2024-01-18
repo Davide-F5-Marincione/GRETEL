@@ -13,7 +13,7 @@ class ProteinsFull(Generator):
     
     def init(self):
         base_path = self.local_config['parameters']['data_dir']
-        # The number of nodes in a graph follows a zipf law, for computability reasons we limit it (as most of the graphs have few nodes!).
+        # The number of nodes in a graph follows a power law, for computability reasons we limit it (as most of the graphs have few nodes!).
         self._max_nodes = self.local_config['parameters']['max_nodes']
 
         self._adj_file_path = join(base_path, 'PROTEINS_full_A.txt')
