@@ -1,3 +1,5 @@
+This is a fork for a project of a ML exam, I didn't truly collaborate, but I did help with some issues.
+
 # GRETEL (v2.0): Graph Counterfactual Explanation Evaluation Framework
 [![discord](https://img.shields.io/badge/Discord-blue?style=for-the-badge)](https://discord.gg/XHSc8Rv2)
 [![linkedin](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/company/artificial-intelligence-information-mining)
